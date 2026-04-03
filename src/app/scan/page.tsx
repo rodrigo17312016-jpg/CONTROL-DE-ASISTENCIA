@@ -90,7 +90,7 @@ export default function ScanPage() {
     }
   }, [editModal.show, scanMode]);
 
-  // Camera QR scanner
+  // Camera QR scanner - start/stop based on scanMode only
   useEffect(() => {
     if (scanMode !== 'camera') {
       stopCamera();
@@ -100,9 +100,25 @@ export default function ScanPage() {
     let mounted = true;
 
     const startCamera = async () => {
+      // Wait for the DOM element to be ready
+      await new Promise(r => setTimeout(r, 100));
+      if (!mounted) return;
+
+      const el = document.getElementById('qr-camera-view');
+      if (!el) return;
+
       try {
         const { Html5Qrcode } = await import('html5-qrcode');
-        if (!mounted || !cameraRef.current) return;
+        if (!mounted) return;
+
+        // Clean up any existing scanner first
+        if (html5QrCodeRef.current) {
+          try { await html5QrCodeRef.current.stop(); } catch {}
+          try { html5QrCodeRef.current.clear(); } catch {}
+          html5QrCodeRef.current = null;
+        }
+        // Clear the container
+        el.innerHTML = '';
 
         const scanner = new Html5Qrcode('qr-camera-view');
         html5QrCodeRef.current = scanner;
@@ -112,11 +128,6 @@ export default function ScanPage() {
           { fps: 10, qrbox: { width: 250, height: 250 }, aspectRatio: 1.0 },
           (decodedText: string) => {
             processScan(decodedText);
-            // Brief pause after scan
-            scanner.pause(true);
-            setTimeout(() => {
-              try { scanner.resume(); } catch {}
-            }, 2000);
           },
           () => {}
         );
@@ -136,12 +147,22 @@ export default function ScanPage() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scanMode]);
 
+  // Pause/resume camera when showing scan result
+  useEffect(() => {
+    if (scanMode !== 'camera' || !html5QrCodeRef.current) return;
+    try {
+      if (lastScan) {
+        html5QrCodeRef.current.pause(true);
+      } else {
+        html5QrCodeRef.current.resume();
+      }
+    } catch {}
+  }, [lastScan, scanMode]);
+
   const stopCamera = async () => {
     if (html5QrCodeRef.current) {
-      try {
-        await html5QrCodeRef.current.stop();
-        html5QrCodeRef.current.clear();
-      } catch {}
+      try { await html5QrCodeRef.current.stop(); } catch {}
+      try { html5QrCodeRef.current.clear(); } catch {}
       html5QrCodeRef.current = null;
     }
     setCameraActive(false);
@@ -306,9 +327,28 @@ export default function ScanPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 md:gap-6">
           {/* Main Scan Area */}
           <div className="lg:col-span-2">
-            <div className={`rounded-2xl border-2 p-4 md:p-8 transition-all duration-500 min-h-[300px] md:min-h-[500px] flex flex-col items-center justify-center ${
+            {/* Camera container - always mounted when camera mode, hidden when showing result */}
+            {scanMode === 'camera' && (
+              <div className={`mb-3 ${lastScan ? 'hidden' : ''}`}>
+                <div className="w-full max-w-sm mx-auto">
+                  <div id="qr-camera-view" ref={cameraRef}
+                    className="w-full rounded-xl overflow-hidden bg-black/50 border border-white/20" />
+                  {!cameraActive && !lastScan && (
+                    <div className="mt-3 text-gray-400 text-sm flex items-center justify-center gap-2">
+                      <RotateCcw className="w-4 h-4 animate-spin" />
+                      Iniciando camara...
+                    </div>
+                  )}
+                  {!lastScan && (
+                    <p className="text-gray-400 text-xs mt-3 text-center">Apunte la camara al codigo QR del empleado</p>
+                  )}
+                </div>
+              </div>
+            )}
+
+            <div className={`rounded-2xl border-2 p-4 md:p-8 transition-all duration-500 min-h-[200px] md:min-h-[400px] flex flex-col items-center justify-center ${
               lastScan === null
-                ? emergencyMode ? 'border-red-500/50 bg-red-500/5' : 'border-white/20 bg-white/5'
+                ? emergencyMode ? 'border-red-500/50 bg-red-500/5' : scanMode === 'camera' ? 'border-white/10 bg-transparent' : 'border-white/20 bg-white/5'
                 : lastScan.success
                   ? 'border-green-500 bg-green-500/10'
                   : 'border-red-500 bg-red-500/10'
@@ -321,21 +361,6 @@ export default function ScanPage() {
                         <FileWarning className="w-4 h-4 md:w-5 md:h-5" />
                         <span className="font-bold text-xs md:text-sm">MODO EMERGENCIA ACTIVO</span>
                       </div>
-                    </div>
-                  )}
-
-                  {/* Camera Mode */}
-                  {scanMode === 'camera' && (
-                    <div className="w-full max-w-sm mx-auto">
-                      <div id="qr-camera-view" ref={cameraRef}
-                        className="w-full rounded-xl overflow-hidden bg-black/50 border border-white/20" />
-                      {!cameraActive && (
-                        <div className="mt-3 text-gray-400 text-sm flex items-center justify-center gap-2">
-                          <RotateCcw className="w-4 h-4 animate-spin" />
-                          Iniciando camara...
-                        </div>
-                      )}
-                      <p className="text-gray-400 text-xs mt-3">Apunte la camara al codigo QR del empleado</p>
                     </div>
                   )}
 
