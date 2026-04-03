@@ -57,20 +57,20 @@ export default function ReportsPage() {
   return (
     <div className="flex h-screen overflow-hidden">
       <Sidebar />
-      <main className="flex-1 overflow-y-auto">
-        <header className="bg-white border-b border-gray-200 px-6 py-4 sticky top-0 z-10 shadow-sm">
+      <main className="flex-1 overflow-y-auto mobile-content">
+        <header className="bg-white border-b border-gray-200 px-3 md:px-6 py-3 md:py-4 sticky top-0 z-10 shadow-sm">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold text-gray-800">Reportes</h1>
-              <p className="text-sm text-gray-500">Informes detallados de asistencia y comidas</p>
+              <h1 className="text-lg md:text-2xl font-bold text-gray-800">Reportes</h1>
+              <p className="text-xs md:text-sm text-gray-500">Informes detallados de asistencia y comidas</p>
             </div>
-            <button onClick={exportCSV} className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2.5 rounded-lg font-medium transition-colors">
+            <button onClick={exportCSV} className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-3 md:px-4 py-2 md:py-2.5 rounded-lg font-medium transition-colors touch-manipulation text-sm">
               <Download className="w-4 h-4" /> Exportar CSV
             </button>
           </div>
         </header>
 
-        <div className="p-6 space-y-6">
+        <div className="p-3 md:p-6 space-y-4 md:space-y-6">
           {/* Filters */}
           <div className="bg-white rounded-xl border shadow-sm p-4 flex items-center gap-4">
             <div className="flex items-center gap-2">
@@ -110,7 +110,7 @@ export default function ReportsPage() {
           </div>
 
           {/* Meal Report */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
             <MealReportCard title="ALMUERZO" data={mealData?.almuerzo} color="orange" />
             <MealReportCard title="CENA" data={mealData?.cena} color="indigo" />
           </div>

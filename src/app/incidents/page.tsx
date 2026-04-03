@@ -132,25 +132,25 @@ export default function IncidentsPage() {
   return (
     <div className="flex min-h-screen bg-gray-50">
       {/* Use existing sidebar from layout */}
-      <div className="flex-1 p-6">
+      <div className="flex-1 p-3 md:p-6 mobile-content">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
-              <Shield className="w-7 h-7 text-red-500" />
+            <h1 className="text-lg md:text-2xl font-bold text-gray-800 flex items-center gap-2">
+              <Shield className="w-6 h-6 md:w-7 md:h-7 text-red-500" />
               Incidentes y Emergencias
             </h1>
-            <p className="text-gray-500 text-sm mt-1">Registro y seguimiento de incidentes en planta</p>
+            <p className="text-gray-500 text-xs md:text-sm mt-1">Registro y seguimiento de incidentes en planta</p>
           </div>
           <button onClick={() => setShowNewModal(true)}
-            className="bg-red-600 hover:bg-red-700 text-white px-4 py-2.5 rounded-xl font-medium flex items-center gap-2 transition-colors shadow-lg shadow-red-500/20">
+            className="bg-red-600 hover:bg-red-700 text-white px-3 md:px-4 py-2 md:py-2.5 rounded-xl font-medium flex items-center gap-2 transition-colors shadow-lg shadow-red-500/20 touch-manipulation text-sm">
             <Plus className="w-4 h-4" />
             Nuevo Incidente
           </button>
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-4 gap-4 mb-6">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-4 md:mb-6">
           {[
             { label: 'Total', value: stats.total, color: 'text-gray-700', bg: 'bg-white' },
             { label: 'Activos', value: stats.active, color: 'text-red-600', bg: 'bg-red-50' },

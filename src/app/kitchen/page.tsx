@@ -43,16 +43,16 @@ export default function KitchenPage() {
   return (
     <div className="flex h-screen overflow-hidden">
       <Sidebar />
-      <main className="flex-1 overflow-y-auto">
+      <main className="flex-1 overflow-y-auto mobile-content">
         {/* Header */}
-        <header className="bg-white border-b border-gray-200 px-6 py-4 sticky top-0 z-10 shadow-sm">
+        <header className="bg-white border-b border-gray-200 px-3 md:px-6 py-3 md:py-4 sticky top-0 z-10 shadow-sm">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-orange-500 rounded-xl flex items-center justify-center">
-                <ChefHat className="w-6 h-6 text-white" />
+            <div className="flex items-center gap-2 md:gap-3">
+              <div className="w-8 h-8 md:w-10 md:h-10 bg-orange-500 rounded-xl flex items-center justify-center">
+                <ChefHat className="w-5 h-5 md:w-6 md:h-6 text-white" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-gray-800">Control de Cocina</h1>
+                <h1 className="text-lg md:text-2xl font-bold text-gray-800">Control de Cocina</h1>
                 <p className="text-sm text-gray-500">
                   {format(currentTime, "EEEE dd 'de' MMMM", { locale: es })} | {format(currentTime, 'HH:mm:ss')}
                 </p>
@@ -62,19 +62,19 @@ export default function KitchenPage() {
               <select
                 value={plantCode}
                 onChange={(e) => setPlantCode(e.target.value)}
-                className="border border-gray-300 rounded-lg px-3 py-2 text-sm"
+                className="border border-gray-300 rounded-lg px-3 py-2 text-sm touch-manipulation"
               >
                 <option value="P1">Planta 1</option>
                 <option value="P2">Planta 2</option>
               </select>
-              <button onClick={fetchData} className="p-2 rounded-lg bg-orange-50 hover:bg-orange-100 transition-colors">
+              <button onClick={fetchData} className="p-2 rounded-lg bg-orange-50 hover:bg-orange-100 transition-colors touch-manipulation">
                 <RefreshCw className="w-5 h-5 text-orange-600" />
               </button>
             </div>
           </div>
         </header>
 
-        <div className="p-6 space-y-6">
+        <div className="p-3 md:p-6 space-y-4 md:space-y-6">
           {/* Active Meal Banner */}
           <div className={`rounded-2xl p-6 ${
             activeMeal === 'ALMUERZO'
@@ -97,7 +97,7 @@ export default function KitchenPage() {
           </div>
 
           {/* Stats Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
             <div className="bg-white rounded-xl border border-gray-200 p-4 shadow-sm">
               <div className="flex items-center gap-2 mb-2">
                 <Users className="w-5 h-5 text-green-500" />
@@ -181,7 +181,7 @@ export default function KitchenPage() {
           )}
 
           {/* Both Meals Summary */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
             {/* Almuerzo */}
             <div className="bg-white rounded-xl border border-gray-200 shadow-sm">
               <div className="px-5 py-4 border-b border-gray-100 bg-orange-50 rounded-t-xl">

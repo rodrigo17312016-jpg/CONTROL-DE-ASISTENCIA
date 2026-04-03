@@ -78,7 +78,7 @@ export default function Dashboard() {
     return (
       <div className="flex h-screen">
         <Sidebar />
-        <main className="flex-1 flex items-center justify-center">
+        <main className="flex-1 flex items-center justify-center mobile-content">
           <div className="text-center">
             <div className="w-16 h-16 border-4 border-green-200 border-t-green-600 rounded-full animate-spin mx-auto"></div>
             <p className="mt-4 text-gray-500 font-medium">Cargando sistema...</p>
@@ -91,37 +91,40 @@ export default function Dashboard() {
   return (
     <div className="flex h-screen overflow-hidden">
       <Sidebar />
-      <main className="flex-1 overflow-y-auto">
+      <main className="flex-1 overflow-y-auto mobile-content">
         {/* Header */}
-        <header className="bg-white border-b border-gray-200 px-6 py-4 sticky top-0 z-10 shadow-sm">
+        <header className="bg-white border-b border-gray-200 px-4 md:px-6 py-3 md:py-4 sticky top-0 z-10 shadow-sm">
           <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-bold text-gray-800">Dashboard General</h1>
-              <p className="text-sm text-gray-500">
+            <div className="min-w-0">
+              <h1 className="text-lg md:text-2xl font-bold text-gray-800 truncate">Dashboard</h1>
+              <p className="text-xs md:text-sm text-gray-500 hidden sm:block">
                 {format(currentTime, "EEEE, dd 'de' MMMM yyyy", { locale: es })}
               </p>
+              <p className="text-xs text-gray-500 sm:hidden">
+                {format(currentTime, "dd MMM yyyy", { locale: es })}
+              </p>
             </div>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 md:gap-4">
               <div className="text-right">
-                <p className="text-3xl font-bold text-green-700 tabular-nums">
+                <p className="text-xl md:text-3xl font-bold text-green-700 tabular-nums">
                   {format(currentTime, 'HH:mm:ss')}
                 </p>
-                <p className="text-xs text-gray-400">
-                  Turno activo: <span className="font-semibold text-green-600">
+                <p className="text-[10px] md:text-xs text-gray-400">
+                  <span className="font-semibold text-green-600">
                     {currentTime.getHours() >= 7 && currentTime.getHours() < 19 ? 'DIA' : 'NOCHE'}
                   </span>
                 </p>
               </div>
-              <button onClick={fetchData} className="p-2 rounded-lg bg-green-50 hover:bg-green-100 transition-colors">
+              <button onClick={fetchData} className="p-2 rounded-lg bg-green-50 hover:bg-green-100 transition-colors touch-manipulation">
                 <RefreshCw className="w-5 h-5 text-green-600" />
               </button>
             </div>
           </div>
         </header>
 
-        <div className="p-6 space-y-6">
+        <div className="p-3 md:p-6 space-y-4 md:space-y-6">
           {/* Global Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4">
             <StatCard icon={<Users className="w-6 h-6" />} label="Empleados Activos" value={data?.globalStats.totalActiveEmployees || 0} color="green" />
             <StatCard icon={<Building2 className="w-6 h-6" />} label="Plantas Operativas" value={data?.globalStats.totalPlants || 0} color="blue" />
             <StatCard icon={<Clock className="w-6 h-6" />} label="Registros Hoy" value={data?.globalStats.todayRecords || 0} color="purple" />

@@ -59,6 +59,37 @@ body {
 .scan-success { animation: pulse-green 1s ease-in-out 3; }
 .scan-error { animation: pulse-red 1s ease-in-out 3; }
 
+@keyframes slide-in-left {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(0); }
+}
+.animate-slide-in-left { animation: slide-in-left 0.25s ease-out; }
+
+/* Mobile: add top padding for fixed header */
+.mobile-content {
+  padding-top: 0;
+}
+@media (max-width: 767px) {
+  .mobile-content {
+    padding-top: 52px;
+  }
+}
+
+/* Touch optimizations */
+@media (pointer: coarse) {
+  button, a, select, input {
+    min-height: 44px;
+  }
+  select {
+    font-size: 16px; /* Prevents iOS zoom on focus */
+  }
+}
+
+/* Landscape optimizations */
+@media (orientation: landscape) and (max-height: 500px) {
+  .scan-area-min { min-height: 250px !important; }
+}
+
 /* Scrollbar styling */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: #f1f5f9; }

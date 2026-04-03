@@ -408,7 +408,7 @@ export default function DashboardPage() {
               <Activity className="w-5 h-5 text-white" />
             </div>
             <div>
-              <h1 className="text-lg font-bold text-gray-900 leading-tight">Dashboard Asistencia</h1>
+              <h1 className="text-base md:text-lg font-bold text-gray-900 leading-tight">Dashboard Asistencia</h1>
               <p className="text-xs text-gray-500">Frutos Tropicales</p>
             </div>
           </div>
@@ -421,7 +421,7 @@ export default function DashboardPage() {
                 <button
                   key={p}
                   onClick={() => applyPreset(p)}
-                  className={`px-3 py-1.5 text-sm font-medium rounded-lg transition-all duration-200 ${
+                  className={`px-3 py-1.5 text-sm font-medium rounded-lg transition-all duration-200 touch-manipulation ${
                     datePreset === p
                       ? 'bg-green-600 text-white shadow-sm'
                       : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
@@ -482,7 +482,7 @@ export default function DashboardPage() {
         </div>
       </header>
 
-      <main className="max-w-[1600px] mx-auto px-4 sm:px-6 py-6 space-y-6">
+      <main className="max-w-[1600px] mx-auto px-3 sm:px-6 py-4 md:py-6 space-y-4 md:space-y-6 mobile-content">
         {/* Error Banner */}
         {error && (
           <div className="bg-red-50 border border-red-200 rounded-xl p-4 flex items-center gap-3">

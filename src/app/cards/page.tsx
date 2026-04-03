@@ -99,23 +99,23 @@ export default function CardsPage() {
   return (
     <div className="flex h-screen overflow-hidden">
       <Sidebar />
-      <main className="flex-1 overflow-y-auto">
-        <header className="bg-white border-b border-gray-200 px-6 py-4 sticky top-0 z-10 shadow-sm">
+      <main className="flex-1 overflow-y-auto mobile-content">
+        <header className="bg-white border-b border-gray-200 px-3 md:px-6 py-3 md:py-4 sticky top-0 z-10 shadow-sm">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold text-gray-800">Generador de Tarjetas QR</h1>
-              <p className="text-sm text-gray-500">Genere e imprima tarjetas de identificacion con codigo QR</p>
+              <h1 className="text-lg md:text-2xl font-bold text-gray-800">Generador de Tarjetas QR</h1>
+              <p className="text-xs md:text-sm text-gray-500">Genere e imprima tarjetas de identificacion con codigo QR</p>
             </div>
             {selected.size > 0 && (
               <button onClick={handlePrint}
-                className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2.5 rounded-lg font-medium transition-colors">
+                className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-3 md:px-4 py-2 md:py-2.5 rounded-lg font-medium transition-colors touch-manipulation text-sm">
                 <Printer className="w-4 h-4" /> Imprimir {selected.size} tarjeta{selected.size > 1 ? 's' : ''}
               </button>
             )}
           </div>
         </header>
 
-        <div className="p-6 space-y-4">
+        <div className="p-3 md:p-6 space-y-4">
           {/* Filters */}
           <div className="bg-white rounded-xl border shadow-sm p-4 flex items-center gap-3">
             <div className="flex-1 relative">
@@ -135,11 +135,11 @@ export default function CardsPage() {
           </div>
 
           {/* Employee Grid with Card Previews */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4" ref={printRef}>
+          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-4" ref={printRef}>
             {employees.map((emp) => (
               <div key={emp.id}
                 onClick={() => toggleSelect(emp.id)}
-                className={`cursor-pointer rounded-xl border-2 p-4 transition-all duration-200 ${
+                className={`cursor-pointer rounded-xl border-2 p-2 md:p-4 transition-all duration-200 touch-manipulation ${
                   selected.has(emp.id)
                     ? 'border-green-500 bg-green-50 shadow-md ring-2 ring-green-200'
                     : 'border-gray-200 bg-white hover:border-gray-300 hover:shadow-sm'

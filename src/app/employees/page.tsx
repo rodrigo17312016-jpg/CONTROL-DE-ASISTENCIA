@@ -91,25 +91,25 @@ export default function EmployeesPage() {
   return (
     <div className="flex h-screen overflow-hidden">
       <Sidebar />
-      <main className="flex-1 overflow-y-auto">
-        <header className="bg-white border-b border-gray-200 px-6 py-4 sticky top-0 z-10 shadow-sm">
+      <main className="flex-1 overflow-y-auto mobile-content">
+        <header className="bg-white border-b border-gray-200 px-3 md:px-6 py-3 md:py-4 sticky top-0 z-10 shadow-sm">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold text-gray-800">Gestion de Empleados</h1>
-              <p className="text-sm text-gray-500">{stats.total} empleados registrados</p>
+              <h1 className="text-lg md:text-2xl font-bold text-gray-800">Gestion de Empleados</h1>
+              <p className="text-xs md:text-sm text-gray-500">{stats.total} empleados registrados</p>
             </div>
             <button
               onClick={() => { setEditingEmployee(null); setForm({ firstName: '', lastName: '', dni: '', type: 'OPERATIVO', shift: 'DIA', plantCode: 'P1', position: '', area: '' }); setShowModal(true); }}
-              className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2.5 rounded-lg font-medium transition-colors shadow-sm"
+              className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-3 md:px-4 py-2 md:py-2.5 rounded-lg font-medium transition-colors shadow-sm touch-manipulation text-sm"
             >
               <Plus className="w-4 h-4" /> Nuevo Empleado
             </button>
           </div>
         </header>
 
-        <div className="p-6 space-y-4">
+        <div className="p-3 md:p-6 space-y-4">
           {/* Stats */}
-          <div className="grid grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
             <div className="bg-white rounded-lg border p-3 flex items-center gap-3">
               <Users className="w-8 h-8 text-green-500" />
               <div><p className="text-2xl font-bold text-gray-800">{stats.total}</p><p className="text-xs text-gray-500">Total</p></div>
