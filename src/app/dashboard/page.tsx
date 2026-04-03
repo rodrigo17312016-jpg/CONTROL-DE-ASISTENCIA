@@ -668,7 +668,7 @@ export default function DashboardPage() {
                         outerRadius={100}
                         innerRadius={50}
                         paddingAngle={3}
-                        label={({ process, percent }) => `${process} ${(percent * 100).toFixed(0)}%`}
+                        label={({ name, percent }: { name: string; percent: number }) => `${name} ${(percent * 100).toFixed(0)}%`}
                         labelLine={{ stroke: '#9ca3af' }}
                       >
                         {statsData.hoursByProcess.map((_, i) => (
