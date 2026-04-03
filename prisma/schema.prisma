@@ -1,0 +1,189 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Plant {
+  id         String             @id @default(uuid())
+  name       String
+  code       String             @unique
+  address    String?
+  createdAt  DateTime           @default(now())
+  employees  Employee[]
+  attendance AttendanceRecord[]
+  tareo      TareoRecord[]
+  incidents  Incident[]
+}
+
+model Employee {
+  id           String             @id @default(uuid())
+  code         String             @unique
+  firstName    String
+  lastName     String
+  dni          String             @unique
+  type         String // ADMINISTRATIVO | OPERATIVO
+  shift        String // DIA | NOCHE
+  plantId      String
+  plant        Plant              @relation(fields: [plantId], references: [id])
+  position     String?
+  area         String?
+  active       Boolean            @default(true)
+  photoUrl     String?
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @updatedAt
+  attendance   AttendanceRecord[]
+  mealRecords  MealRecord[]
+  alerts       Alert[]
+  tareo        TareoRecord[]
+  incidents    Incident[]
+
+  @@index([dni])
+  @@index([plantId])
+}
+
+model AttendanceRecord {
+  id           String   @id @default(uuid())
+  employeeId   String
+  employee     Employee @relation(fields: [employeeId], references: [id])
+  plantId      String
+  plant        Plant    @relation(fields: [plantId], references: [id])
+  type         String // INGRESO | SALIDA
+  shift        String // DIA | NOCHE
+  shiftDate    String // Fecha logica del turno YYYY-MM-DD
+  timestamp    DateTime @default(now())
+  method       String   @default("QR")
+  isLate       Boolean  @default(false)
+  isEarly      Boolean  @default(false)
+  minutesLate  Int      @default(0)
+  minutesEarly Int      @default(0)
+  notes        String?
+  editedBy     String?
+  editedAt     DateTime?
+  editReason   String?
+  isManualEdit Boolean  @default(false)
+  syncStatus   String   @default("PENDING") // PENDING | SYNCED | CONFLICT
+  createdAt    DateTime @default(now())
+
+  @@index([employeeId, shiftDate])
+  @@index([plantId, shiftDate])
+  @@index([timestamp])
+  @@index([syncStatus])
+}
+
+model MealRecord {
+  id           String    @id @default(uuid())
+  employeeId   String
+  employee     Employee  @relation(fields: [employeeId], references: [id])
+  mealType     String // ALMUERZO | CENA
+  date         String // YYYY-MM-DD
+  status       String // PROGRAMADO | SERVIDO | CANCELADO | NO_PRESENTADO
+  cancelledAt  DateTime?
+  cancelReason String?
+  servedAt     DateTime?
+  syncStatus   String    @default("PENDING")
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@unique([employeeId, mealType, date])
+  @@index([date, mealType, status])
+}
+
+model TareoRecord {
+  id            String    @id @default(uuid())
+  employeeId    String
+  employee      Employee  @relation(fields: [employeeId], references: [id])
+  plantId       String
+  plant         Plant     @relation(fields: [plantId], references: [id])
+  date          String    // YYYY-MM-DD
+  weekNumber    Int       // Numero de semana
+  process       String    // MANGO, GRANADA, PALTA, etc.
+  labor         String    // Area: MATERIA PRIMA, EMPAQUE, etc.
+  activity      String    // Actividad especifica
+  horaInicio    String?
+  horaFin       String?
+  hIngRefrigerio String?
+  hSalRefrigerio String?
+  horasReloj    String?
+  horasNetas    Float     @default(0)
+  observation   String?
+  syncStatus    String    @default("PENDING")
+  createdAt     DateTime  @default(now())
+
+  @@index([employeeId, date])
+  @@index([plantId, date])
+  @@index([date, process])
+  @@index([weekNumber])
+  @@index([labor])
+  @@index([activity])
+}
+
+model Incident {
+  id           String    @id @default(uuid())
+  employeeId   String
+  employee     Employee  @relation(fields: [employeeId], references: [id])
+  plantId      String
+  plant        Plant     @relation(fields: [plantId], references: [id])
+  type         String    // ACCIDENTE | EMERGENCIA | PERMISO | FALTA_JUSTIFICADA | ABANDONO | OTRO
+  severity     String    // LEVE | MODERADO | GRAVE | CRITICO
+  title        String
+  description  String
+  date         String    // YYYY-MM-DD
+  time         String?   // HH:MM
+  resolved     Boolean   @default(false)
+  resolvedAt   DateTime?
+  resolvedBy   String?
+  resolution   String?
+  autoExitApplied Boolean @default(false) // Se aplico salida automatica
+  syncStatus   String    @default("PENDING")
+  createdAt    DateTime  @default(now())
+
+  @@index([employeeId, date])
+  @@index([plantId, date])
+  @@index([type])
+  @@index([resolved])
+}
+
+model Alert {
+  id         String    @id @default(uuid())
+  type       String
+  severity   String
+  title      String
+  message    String
+  employeeId String?
+  employee   Employee? @relation(fields: [employeeId], references: [id])
+  plantCode  String?
+  resolved   Boolean   @default(false)
+  resolvedAt DateTime?
+  resolvedBy String?
+  syncStatus String    @default("PENDING")
+  createdAt  DateTime  @default(now())
+
+  @@index([resolved, createdAt])
+  @@index([plantCode, resolved])
+}
+
+model SyncLog {
+  id         String   @id @default(uuid())
+  tableName  String
+  recordId   String
+  action     String   // INSERT | UPDATE | DELETE
+  status     String   // PENDING | SYNCED | FAILED
+  payload    String   // JSON del registro
+  error      String?
+  attempts   Int      @default(0)
+  createdAt  DateTime @default(now())
+  syncedAt   DateTime?
+
+  @@index([status])
+  @@index([tableName, status])
+}
+
+model SystemConfig {
+  id    String @id @default(uuid())
+  key   String @unique
+  value String
+}
